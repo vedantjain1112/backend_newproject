@@ -8,9 +8,9 @@ const cookieParser = require("cookie-parser");
 dotenv.config({ path: "./.env" });
 const cors = require("cors");
 const infoRouter = require("./routers/infoRouter");
-const FRONTEND_URL = process.env.FRONTEND_URL;
-
 const app = express();
+const quizRouter = require("./routers/quizRouter");
+const quoteRouter = require("./routers/quoteRouter");
 
 //middlewares
 app.use(express.json());
@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: FRONTEND_URL,
+    origin: [process.env.FRONTEND_URL_ADMIN_PAGE, process.env.FRONTEND_URL],
   })
 );
 
@@ -27,6 +27,8 @@ app.use("/auth", authRouter);
 app.use("/data", allDataRouter);
 app.use("/info", infoRouter);
 app.use("/uploads", express.static("uploads"));
+app.use(quizRouter);
+app.use("/", quoteRouter);
 
 app.get("/", (req, res) => {
   res.status(200).send("ok from server");
